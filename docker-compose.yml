@@ -1,0 +1,27 @@
+version: "3.0"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./setup/docker/devel.Dockerfile
+    command: ./setup/docker/start.sh
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www/html/
+    env_file:
+      - .env
+    depends_on:
+      - pg
+
+  pg:
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+        POSTGRES_PASSWORD: auction
+        POSTGRES_USER: auction
+        POSTGRES_DB: auction_system
+    volumes:
+      - ./docker/mysql/dump:/docker-entrypoint-initdb.d
